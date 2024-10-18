@@ -14,6 +14,12 @@ import { collection, addDoc } from 'firebase/firestore'
 
 import { firestore } from '@/firebase/config'
 import { toast } from 'react-toastify'
+import { getAuth } from 'firebase/auth';
+
+// Get the authenticated user
+const auth = getAuth();
+const user = auth.currentUser;
+const userId = user ? user.uid : null;  
 
 export default function NewProductForm() {
     const [expandedSections, setExpandedSections] = useState({
@@ -38,6 +44,15 @@ export default function NewProductForm() {
         // Add other fields here
     })
 
+    const [images, setImages] = useState<File[]>([])
+
+
+    const handleFileChange = (file: File | null) => {
+        if (file) {
+            setImages((prevImages) => [...prevImages, file]);
+        }
+    }
+    
     
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -51,25 +66,36 @@ export default function NewProductForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-
-        // Validate mandatory fields
+    
         const mandatoryFields = ['productName', 'category', 'brand', 'unit', 'quantity', 'price'] as const
         const missingFields = mandatoryFields.filter(field => !formData[field])
-
+    
         if (missingFields.length > 0) {
             toast.error(`Please fill in all mandatory fields: ${missingFields.join(', ')}`)
             return
         }
-
+    
         try {
-            const docRef = await addDoc(collection(firestore, 'products'), formData)
-            toast.success("Product saved successfully!")
-            // Reset the form here (Stephane)
+            const user = auth.currentUser;
+            if (!user) {
+                toast.error("User is not authenticated");
+                return;
+            }
+    
+            const productData = {
+                ...formData,
+                userId: user.uid, 
+                createdAt: new Date() 
+            };
+    
+            const docRef = await addDoc(collection(firestore, 'products'), productData);
+            toast.success("Product saved successfully!");
         } catch (error) {
-            console.error("Error adding document: ", error)
-            toast.error("Failed to save product. Please try again.")
+            console.error("Error adding document: ", error);
+            toast.error("Failed to save product. Please try again.");
         }
     }
+    
 
     return (
         <div className="container mx-auto p-6 bg-gray-50">
@@ -101,31 +127,7 @@ export default function NewProductForm() {
                     </CardHeader>
                     {expandedSections.productInfo && (
                         <CardContent className="pt-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <Label htmlFor="store">Store</Label>
-                                    <Select>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Choose" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="store1">Store 1</SelectItem>
-                                            <SelectItem value="store2">Store 2</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div>
-                                    <Label htmlFor="warehouse">Warehouse</Label>
-                                    <Select>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Choose" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="warehouse1">Warehouse 1</SelectItem>
-                                            <SelectItem value="warehouse2">Warehouse 2</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
+                            <div className=" grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <Label htmlFor="productName">Product Name *</Label>
                                     <Input
@@ -136,17 +138,6 @@ export default function NewProductForm() {
                                         onChange={handleInputChange}
                                         required
                                     />
-                                </div>
-                                <div>
-                                    <Label htmlFor="slug">Slug</Label>
-                                    <Input id="slug" placeholder="Enter slug" />
-                                </div>
-                                <div className="md:col-span-2">
-                                    <Label htmlFor="sku">SKU</Label>
-                                    <div className="flex">
-                                        <Input id="sku" placeholder="Enter SKU" className="rounded-r-none" />
-                                        <Button className="rounded-l-none bg-orange-500 hover:bg-orange-600">Generate Code</Button>
-                                    </div>
                                 </div>
                                 <div>
                                     <Label htmlFor="category">Category *</Label>
@@ -185,13 +176,6 @@ export default function NewProductForm() {
                                             <SelectItem value="unit2">Unit 2</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                </div>
-                                <div className="md:col-span-2">
-                                    <Label htmlFor="itemCode">Item Code</Label>
-                                    <div className="flex">
-                                        <Input id="itemCode" placeholder="Please Enter Item Code" className="rounded-r-none" />
-                                        <Button className="rounded-l-none bg-orange-500 hover:bg-orange-600">Generate Code</Button>
-                                    </div>
                                 </div>
                             </div>
                             <div className="mt-4">
@@ -296,40 +280,49 @@ export default function NewProductForm() {
                         </CardContent>
                     )}
                 </Card>
-
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-md font-medium">
-                            <span className="bg-orange-100 text-orange-500 p-1 rounded-full mr-2">🖼</span>
-                            Images
-                        </CardTitle>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="w-9 p-0"
-                            onClick={() => toggleSection('images')}
-                        >
-                            {expandedSections.images ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                   <CardTitle className="text-md font-medium">
+                      <span className="bg-orange-100 text-orange-500 p-1 rounded-full mr-2">🖼</span>
+                        Images
+                   </CardTitle>
+                   <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-9 p-0"
+                    onClick={() => toggleSection('images')}
+                     >
+                  {expandedSections.images ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                   </Button>
+             </CardHeader>
+         {expandedSections.images && (
+        <CardContent className="pt-4">
+            <div className="flex flex-wrap gap-4">
+                <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-gray-400 relative">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                        onChange={(e) =>
+                            handleFileChange(e.target.files ? e.target.files[0] : null)
+                        }
+                    />
+                    <Plus className="h-6 w-6 text-gray-400" />
+                    <span className="sr-only">Add Images</span>
+                </div>
+
+                {/* Display selected images */}
+                {images.map((image, index) => (
+                    <div key={index} className="w-32 h-32 border border-gray-200 rounded-lg relative">
+                        <img src={URL.createObjectURL(image)} alt={`Image ${index}`} className="w-full h-full object-cover rounded-lg" />
+                        <Button variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6">
+                            <X className="h-4 w-4" />
                         </Button>
-                    </CardHeader>
-                    {expandedSections.images && (
-                        <CardContent className="pt-4">
-                            <div className="flex flex-wrap gap-4">
-                                <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-gray-400">
-                                    <Plus className="h-6 w-6 text-gray-400" />
-                                    <span className="sr-only">Add Images</span>
-                                </div>
-                                {['front', 'back'].map((side) => (
-                                    <div key={side} className="w-32 h-32 border border-gray-200 rounded-lg relative">
-                                        <img src={`/placeholder.svg?height=128&width=128&text=iPhone+${side}`} alt={`iPhone ${side}`} className="w-full h-full object-cover rounded-lg" />
-                                        <Button variant="destructive" size="icon" className="absolute top-1 right-1 h-6 w-6">
-                                            <X className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    )}
+                    </div>
+                ))}
+            </div>
+        </CardContent>
+                        )}
                 </Card>
 
                 <Card>
@@ -347,7 +340,6 @@ export default function NewProductForm() {
                             {expandedSections.customFields ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                         </Button>
                     </CardHeader>
-
                     {expandedSections.customFields && (
                         <CardContent className="pt-4">
                             <div className="flex space-x-4 mb-4">
@@ -399,10 +391,13 @@ export default function NewProductForm() {
                     <Button className="bg-orange-500 hover:bg-orange-600" type="submit">Save Product</Button>
                 </div>
             </form>
-
             <Button variant="outline" size="icon" className="fixed bottom-6 right-6 h-10 w-10 rounded-full bg-orange-500 hover:bg-orange-600">
                 <Settings className="h-5 w-5 text-white" />
             </Button>
         </div>
     )
 }
+
+
+
+
