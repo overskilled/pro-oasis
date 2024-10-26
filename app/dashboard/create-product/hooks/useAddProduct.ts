@@ -1,3 +1,4 @@
+"use client"
 import { AddProductFormInputs } from "../validators/AddProductInputs";
 import {
   useAddProductBrand,
@@ -29,6 +30,8 @@ export interface UseAddProductBehaviour {
   addSupplierBehaviour: UseAddSupplierBehaviour;
   form: UseFormReturn<AddProductFormInputs>;
   isPending: boolean;
+  onSubmit: (data: AddProductFormInputs) => void;
+  images: File[]
 }
 
 export const useAddProduct = (): UseAddProductBehaviour => {
@@ -39,7 +42,7 @@ export const useAddProduct = (): UseAddProductBehaviour => {
 
   const [isPending, startTransition] = useTransition();
 
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
   const [imageUrl, setImageUrl] = useState<string>();
 
   const form = useForm<AddProductFormInputs>({
@@ -48,25 +51,25 @@ export const useAddProduct = (): UseAddProductBehaviour => {
 
   const selectedProductCategory = (): OptionsSelect => {
     return (
-      addProductCategoryBehaviour.produtCategories.find(
+      addProductCategoryBehaviour.productCategories.find(
         (option) => option.value === form.watch("productCategory")
-      ) ?? addProductCategoryBehaviour.produtCategories[0]
+      ) ?? addProductCategoryBehaviour.productCategories[0]
     );
   };
 
   const selectedProductBrand = (): OptionsSelect => {
     return (
-      addProductBrandBehaviour.allprodutsBrands.find(
+      addProductBrandBehaviour.allProductsBrands.find(
         (option) => option.value === form.watch("productBrand")
-      ) ?? addProductBrandBehaviour.allprodutsBrands[0]
+      ) ?? addProductBrandBehaviour.allProductsBrands[0]
     );
   };
 
   const selectedProductUnit = (): OptionsSelect => {
     return (
-      addProductUnitBehaviour.allprodutsUnits.find(
+      addProductUnitBehaviour.allProductsUnits.find(
         (option) => option.value === form.watch("unit")
-      ) ?? addProductUnitBehaviour.allprodutsUnits[0]
+      ) ?? addProductUnitBehaviour.allProductsUnits[0]
     );
   };
 
@@ -91,61 +94,41 @@ export const useAddProduct = (): UseAddProductBehaviour => {
       quantity: "",
       supplier: "",
       unit: "",
+      productType: "",
+      taxType: "",
+      discountType: "",
+      discountValue: ""
     });
   };
 
-  const handleUpload = async () => {
-    if (!image) return;
-
-    const fileExt = image.name.split(".").pop(); // Get the file extension
-    const fileName = `${Math.random()}.${fileExt}`; // Create a random file name
-    const filePath = `images/${fileName}`; // Define the file path in storage
-
-    const storageRef = ref(storage, filePath); // Create a reference to the file location
-
-    try {
-      // Upload the file
-      await uploadBytes(storageRef, image);
-
-      // Get the public URL after upload
-      const url = await getDownloadURL(storageRef);
-      setImageUrl(url); // Set the image URL in your state
-      return url; // Return the URL
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
-
-  const saveProduct = async (data: AddProductFormInputs) => {
-    startTransition(async () => {
-      try {
-        const newProductRef = await addDoc(collection(firestore, "products"), {
-          productname: data.productName,
-          productcategory: selectedProductCategory().text,
-          productbrand: selectedProductBrand().text,
-          description: data.description,
-          quantity: +data.quantity,
-          price: +data.price,
-          alertquantity: +data.alertQuantity,
-          unit: selectedProductUnit().text,
-          supplier: selectedSupplier().text,
-          imageUrl: "",
-          manufactureddate:
-            data.manufacturedDate === "" ? null : data.manufacturedDate,
-          expiredate: data.expireDate === "" ? null : data.expireDate,
-        });
-
-        // Optionally, you can log the new product ID or other info if needed
-        console.log("Product added with ID:", newProductRef.id);
-
-        // Clear the form and show success notification
-        clearForm();
-        toast("Produit enregistré avec succès");
-      } catch (error) {
-        toast.error(ERROR_MESSAGE);
-        console.error("Error adding product: ", error);
-      }
-    });
+  const onSubmit = (data: AddProductFormInputs) => {
+      console.log("data",data)
+    // startTransition(async () => {
+    //   try {
+    //     await addDoc(collection(firestore, "products"), {
+    //       productName: data.productName,
+    //       productCategory: selectedProductCategory().text,
+    //       productBrand: selectedProductBrand().text,
+    //       description: data.description,
+    //       quantity: +data.quantity,
+    //       price: +data.price,
+    //       alertQuantity: +data.alertQuantity,
+    //       unit: selectedProductUnit().text,
+    //       supplier: selectedSupplier().text,
+    //       imageUrl: "",
+    //       manufacturedDate:
+    //         data.manufacturedDate === "" ? null : data.manufacturedDate,
+    //       expireDate: data.expireDate === "" ? null : data.expireDate,
+    //
+    //     });
+    //
+    //     clearForm();
+    //     toast("Produit enregistré avec succès");
+    //   } catch (error) {
+    //     toast.error(ERROR_MESSAGE);
+    //     console.error("Error adding product: ", error);
+    //   }
+    // });
   };
 
   return {
@@ -155,5 +138,7 @@ export const useAddProduct = (): UseAddProductBehaviour => {
     addSupplierBehaviour,
     form,
     isPending,
+    onSubmit,
+    images
   };
 };

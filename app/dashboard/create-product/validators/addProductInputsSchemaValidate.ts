@@ -8,6 +8,10 @@ export const addProductInputsSchemaValidate = () =>
         .string()
         .min(1, { message: "La catégorie du produit est requise" }),
       productBrand: z.string().min(1, { message: "La marque du produit est requise" }),
+        productType: z.string().min(1, { message: "Le type du produit est requise" }),
+        taxType: z.string().min(1, { message: "Le type du tax est requise" }),
+        discountType: z.string().min(1, { message: "Le type du tax est requise" }),
+        discountValue: z.string().min(1, { message: "la valeur de la reduction est requise" }),
       description: z
         .string()
         .min(1, { message: "La description est requise" })

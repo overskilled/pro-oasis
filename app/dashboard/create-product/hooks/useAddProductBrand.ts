@@ -1,5 +1,5 @@
 import { useEffect, useState, useTransition } from "react";
-import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore"; // Firestore functions
+import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { ModalBehavior, useModal } from "@/hooks/useModal";
 import { OptionsSelect } from "@/lib/utils";
 import { firestore } from "@/firebase/config";
@@ -8,7 +8,7 @@ export interface UseAddProductBrandBehaviour {
   addBrandModal: ModalBehavior;
   productBrand?: string;
   handleChangeProductBrand: (value: string) => void;
-  allprodutsBrands: OptionsSelect[];
+  allProductsBrands: OptionsSelect[];
   isPending: boolean;
   addNewProductBrand: () => void;
   cancelAddNewProductBrand: () => void;
@@ -19,7 +19,7 @@ export const useAddProductBrand = (): UseAddProductBrandBehaviour => {
 
   const [productBrand, setProductBrand] = useState<string>();
 
-  const [allprodutsBrands, setAllProdutsBrands] = useState<OptionsSelect[]>([]);
+  const [allProductsBrands, setAllProductsBrands] = useState<OptionsSelect[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
@@ -60,15 +60,12 @@ export const useAddProductBrand = (): UseAddProductBrandBehaviour => {
         ...doc.data(),
       }));
 
-      const formattedbrands = brands.map((brand) => ({
+      const formattedBrands = brands.map((brand) => ({
         id: brand.id,
         text: brand.name,
         value: brand.id,
       }));
-      setAllProdutsBrands([
-        { id: "", text: "sélectionner une marque", value: "" },
-        ...formattedbrands,
-      ]);
+      setAllProductsBrands(formattedBrands);
     } catch (error) {
       console.error("Error fetching brands: ", error);
     }
@@ -94,7 +91,7 @@ export const useAddProductBrand = (): UseAddProductBrandBehaviour => {
     addBrandModal,
     productBrand,
     handleChangeProductBrand,
-    allprodutsBrands,
+    allProductsBrands,
     addNewProductBrand,
     cancelAddNewProductBrand,
     isPending,

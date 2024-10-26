@@ -8,7 +8,7 @@ export interface UseAddProductCategoryBehaviour {
   addCategoryModal: ModalBehavior;
   productCategory?: string;
   handleChangeProductCategory: (value: string) => void;
-  produtCategories: OptionsSelect[];
+  productCategories: OptionsSelect[];
   isPending: boolean;
   addNewProductCategory: () => void;
   cancelAddNewProductCategory: () => void;
@@ -19,7 +19,7 @@ export const useAddProductCategory = (): UseAddProductCategoryBehaviour => {
 
   const [productCategory, setProductCategory] = useState<string>();
 
-  const [produtCategories, setProdutCategories] = useState<OptionsSelect[]>([]);
+  const [productCategories, setProductCategories] = useState<OptionsSelect[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
@@ -65,10 +65,7 @@ export const useAddProductCategory = (): UseAddProductCategoryBehaviour => {
         text: category.name,
         value: category.id,
       }));
-      setProdutCategories([
-        { id: "", text: "sélectionnez une catégorie", value: "" },
-        ...formattedCategories,
-      ]);
+      setProductCategories(formattedCategories);
     } catch (error) {
       console.error("Error fetching categories: ", error);
     }
@@ -94,7 +91,7 @@ export const useAddProductCategory = (): UseAddProductCategoryBehaviour => {
     addCategoryModal,
     productCategory,
     handleChangeProductCategory,
-    produtCategories,
+    productCategories,
     isPending,
     addNewProductCategory,
     cancelAddNewProductCategory,

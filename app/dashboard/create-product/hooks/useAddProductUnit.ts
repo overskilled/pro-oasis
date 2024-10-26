@@ -8,7 +8,7 @@ export interface UseAddProductUnitbehaviour {
   addUnitModal: ModalBehavior;
   productUnit?: string;
   handleChangeProductUnit: (value: string) => void;
-  allprodutsUnits: OptionsSelect[];
+  allProductsUnits: OptionsSelect[];
   addNewProductUnit: () => void;
   cancelAddNewProductUnit: () => void;
   isPending: boolean;
@@ -23,7 +23,7 @@ export const useAddProductUnit = (): UseAddProductUnitbehaviour => {
     setProductUnit(value);
   };
 
-  const [allprodutsUnits, setAllProdutsUnits] = useState<OptionsSelect[]>([]);
+  const [allProductsUnits, setAllProductsUnits] = useState<OptionsSelect[]>([]);
 
   const [isPending, startTransition] = useTransition();
 
@@ -65,10 +65,7 @@ export const useAddProductUnit = (): UseAddProductUnitbehaviour => {
         value: unit.id,
       }));
 
-      setAllProdutsUnits([
-        { id: "", text: "sélectionnez une unité", value: "" },
-        ...formattedUnits,
-      ]);
+      setAllProductsUnits(formattedUnits);
     } catch (error) {
       console.error("Error fetching product units: ", error);
     }
@@ -94,7 +91,7 @@ export const useAddProductUnit = (): UseAddProductUnitbehaviour => {
     addUnitModal,
     productUnit,
     handleChangeProductUnit,
-    allprodutsUnits,
+    allProductsUnits: allProductsUnits,
     addNewProductUnit,
     cancelAddNewProductUnit,
     isPending,

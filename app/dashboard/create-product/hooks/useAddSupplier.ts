@@ -63,10 +63,7 @@ export const useAddSupplier = (): UseAddSupplierBehaviour => {
         value: supplier.id,
       }));
 
-      setAllSuppliers([
-        { id: "", text: "sélectionnez un fournisseur", value: "" },
-        ...formattedSuppliers,
-      ]);
+      setAllSuppliers(formattedSuppliers);
     } catch (error) {
       console.error("Error fetching suppliers: ", error);
     }
