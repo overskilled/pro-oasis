@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChevronDown,
   ChevronLeft,
-  ChevronUp,
+  ChevronUp, Loader,
   PlusCircle,
 } from "lucide-react";
 import { useAddProduct } from "./hooks/useAddProduct";
@@ -24,6 +24,8 @@ import AddProductCategoryModal from "./components/AddProductCategoryModal";
 import AddBrandModal from "./components/AddBrandModal";
 import AddUnitModal from "./components/AddUnitModal";
 import AddSupplierModal from "./components/AddSupplierModal";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {Checkbox} from "@/components/ui/checkbox";
 
 export default function NewProductForm() {
   const [expandedSections, setExpandedSections] = useState({
@@ -143,7 +145,7 @@ export default function NewProductForm() {
                         )
                       )}
                     </SelectContent>
-                    {/*<p className="text-xs text-red-500">{errors.productCategory?.message}</p>*/}
+                    <p className="text-xs text-red-500">{errors.productCategory?.message}</p>
                   </Select>
                 </div>
                 <div>
@@ -161,14 +163,14 @@ export default function NewProductForm() {
                     </Button>
                   </div>
                   <Select
-                    name="brand"
+                    name="productBrand"
                     onValueChange={(e)=>{
                       form.setValue("productBrand",e)
                     }}
                     required
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose" />
+                      <SelectValue placeholder="sélectionner la marque" />
                     </SelectTrigger>
                     <SelectContent>
                       {addProductBrandBehaviour.allProductsBrands.map(
@@ -203,7 +205,7 @@ export default function NewProductForm() {
                     required
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose" />
+                      <SelectValue placeholder="sélectionner l'unité" />
                     </SelectTrigger>
                     <SelectContent>
                       {addProductUnitBehaviour.allProductsUnits.map((unit) => (
@@ -236,7 +238,7 @@ export default function NewProductForm() {
                     required
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose" />
+                      <SelectValue placeholder="sélectionner le fournisseur" />
                     </SelectTrigger>
                     <SelectContent>
                       {addSupplierBehaviour.allSuppliers.map((supplier) => (
@@ -269,8 +271,8 @@ export default function NewProductForm() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-md font-medium">
-              <span className="bg-blue-100 text-blue-500 p-1 rounded-full mr-2">
+            <CardTitle className="text-md flex items-center gap-3 font-medium">
+              <span className="bg-blue-100 size-5 flex items-center justify-center text-blue-500 p-1 rounded-full">
                 $
               </span>
               Pricing & Stocks
@@ -288,117 +290,126 @@ export default function NewProductForm() {
               )}
             </Button>
           </CardHeader>
-          {/*{expandedSections.pricingStocks && (*/}
-          {/*  <CardContent className="pt-4">*/}
-          {/*    <div className="space-y-4">*/}
-          {/*      <div>*/}
-          {/*        <Label className="text-base">Product Type</Label>*/}
-          {/*        <RadioGroup*/}
-          {/*          defaultValue="single"*/}
-          {/*          className="flex flex-wrap gap-4 mt-2"*/}
-          {/*          onValueChange={(e)=>{*/}
-          {/*            form.setValue("productType",e)*/}
-          {/*          }}*/}
-          {/*        >*/}
-          {/*          <div className="flex items-center space-x-2">*/}
-          {/*            <RadioGroupItem value="single" id="single" />*/}
-          {/*            <Label htmlFor="single">Single Product</Label>*/}
-          {/*          </div>*/}
-          {/*          <div className="flex items-center space-x-2">*/}
-          {/*            <RadioGroupItem value="variable" id="variable" />*/}
-          {/*            <Label htmlFor="variable">Variable Product</Label>*/}
-          {/*          </div>*/}
-          {/*        </RadioGroup>*/}
-          {/*      </div>*/}
-          {/*      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">*/}
-          {/*        <div>*/}
-          {/*          <Label htmlFor="quantity">Quantity *</Label>*/}
-          {/*          <Input*/}
-          {/*            id="quantity"*/}
-          {/*            name="quantity"*/}
-          {/*            type="number"*/}
-          {/*            placeholder="Enter quantity"*/}
-          {/*            onChange={(e)=>{*/}
-          {/*              form.setValue("quantity",e.target.value)*/}
-          {/*            }}*/}
-          {/*            required*/}
-          {/*          />*/}
-          {/*        </div>*/}
-          {/*        <div>*/}
-          {/*          <Label htmlFor="price">Price *</Label>*/}
-          {/*          <Input*/}
-          {/*            id="price"*/}
-          {/*            name="price"*/}
-          {/*            type="number"*/}
-          {/*            placeholder="Enter price"*/}
-          {/*            onChange={(e)=>{*/}
-          {/*              form.setValue("price",e.target.value)*/}
-          {/*            }}*/}
-          {/*            required*/}
-          {/*          />*/}
-          {/*        </div>*/}
-          {/*        <div>*/}
-          {/*          <Label htmlFor="taxType">Tax Type</Label>*/}
-          {/*          <Select*/}
-          {/*            name="taxType"*/}
-          {/*            onValueChange={(e)=>{*/}
-          {/*              form.setValue("taxType",e)*/}
-          {/*            }}*/}
-          {/*          >*/}
-          {/*            <SelectTrigger>*/}
-          {/*              <SelectValue placeholder="Select Option" />*/}
-          {/*            </SelectTrigger>*/}
-          {/*            <SelectContent>*/}
-          {/*              <SelectItem value="inclusive">Inclusive</SelectItem>*/}
-          {/*              <SelectItem value="exclusive">Exclusive</SelectItem>*/}
-          {/*            </SelectContent>*/}
-          {/*          </Select>*/}
-          {/*        </div>*/}
-          {/*        <div>*/}
-          {/*          <Label htmlFor="discountType">Discount Type</Label>*/}
-          {/*          <Select*/}
-          {/*            name="discountType"*/}
-          {/*            onValueChange={(e)=>{*/}
-          {/*              form.setValue("discountType",e)*/}
-          {/*            }}*/}
-          {/*          >*/}
-          {/*            <SelectTrigger>*/}
-          {/*              <SelectValue placeholder="Choose" />*/}
-          {/*            </SelectTrigger>*/}
-          {/*            <SelectContent>*/}
-          {/*              <SelectItem value="percentage">Percentage</SelectItem>*/}
-          {/*              <SelectItem value="fixed">Fixed Amount</SelectItem>*/}
-          {/*            </SelectContent>*/}
-          {/*          </Select>*/}
-          {/*        </div>*/}
-          {/*        <div>*/}
-          {/*          <Label htmlFor="discountValue">Discount Value</Label>*/}
-          {/*          <Input*/}
-          {/*            id="discountValue"*/}
-          {/*            name="discountValue"*/}
-          {/*            placeholder="Enter discount value"*/}
-          {/*            onChange={(e)=> {*/}
-          {/*              form.setValue("discountValue", e.target.value)*/}
-          {/*            }}*/}
-          {/*          />*/}
-          {/*        </div>*/}
-          {/*        <div>*/}
-          {/*          <Label htmlFor="quantityAlert">Quantity Alert</Label>*/}
-          {/*          <Input*/}
-          {/*            id="quantityAlert"*/}
-          {/*            name="quantityAlert"*/}
-          {/*            type="number"*/}
-          {/*            placeholder="Enter quantity alert"*/}
-          {/*            onChange={(e)=> {*/}
-          {/*              form.setValue("alertQuantity", e.target.value)*/}
-          {/*            }}*/}
-          {/*          />*/}
-          {/*        </div>*/}
-          {/*      </div>*/}
-          {/*    </div>*/}
-          {/*  </CardContent>*/}
-          {/*)}*/}
+          {expandedSections.pricingStocks && (
+            <CardContent className="pt-4">
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-base">Product Type</Label>
+                  <RadioGroup
+                    defaultValue="single"
+                    className="flex flex-wrap gap-4 mt-2"
+                    onValueChange={(e)=>{
+                      form.setValue("productType",e)
+                    }}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="single" id="single" />
+                      <Label htmlFor="single">Single Product</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="variable" id="variable" />
+                      <Label htmlFor="variable">Variable Product</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="quantity">Quantity *</Label>
+                    <Input
+                      id="quantity"
+                      name="quantity"
+                      type="number"
+                      placeholder="Enter quantity"
+                      registerValidate={register}
+                      onChange={(e)=>{
+                        form.setValue("quantity",e.target.value)
+                        form.clearErrors("quantity")
+                      }}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="price">Price *</Label>
+                    <Input
+                      id="price"
+                      name="price"
+                      type="number"
+                      placeholder="Enter price"
+                      registerValidate={register}
+                      onChange={(e)=>{
+                        form.setValue("price",e.target.value)
+                        form.clearErrors("price")
+                      }}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taxType">Tax Type</Label>
+                    <Select
+                      name="taxType"
+                      onValueChange={(e)=>{
+                        form.setValue("taxType",e)
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Option" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="inclusive">Inclusive</SelectItem>
+                        <SelectItem value="exclusive">Exclusive</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="discountType">Discount Type</Label>
+                    <Select
+                      name="discountType"
+                      onValueChange={(e)=>{
+                        form.setValue("discountType",e)
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="percentage">Percentage</SelectItem>
+                        <SelectItem value="fixed">Fixed Amount</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="discountValue">Discount Value</Label>
+                    <Input
+                      id="discountValue"
+                      name="discountValue"
+                      placeholder="Enter discount value"
+                      registerValidate={register}
+                      onChange={(e)=> {
+                        form.setValue("discountValue", e.target.value)
+                        form.clearErrors("discountValue")
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="alertQuantity">Quantity Alert</Label>
+                    <Input
+                      id="alertQuantity"
+                      name="alertQuantity"
+                      type="number"
+                      placeholder="Enter quantity alert"
+                      registerValidate={register}
+                      onChange={(e)=> {
+                        form.setValue("alertQuantity", e.target.value)
+                        form.clearErrors("alertQuantity")
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          )}
         </Card>
+
         {/*<Card>*/}
         {/*  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">*/}
         {/*    <CardTitle className="text-md font-medium">*/}
@@ -460,98 +471,81 @@ export default function NewProductForm() {
         {/*  )}*/}
         {/*</Card>*/}
 
-        {/*<Card>*/}
-        {/*  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">*/}
-        {/*    <CardTitle className="text-md font-medium">*/}
-        {/*      <span className="bg-blue-100 text-blue-500 p-1 rounded-full mr-2">*/}
-        {/*        📋*/}
-        {/*      </span>*/}
-        {/*      Custom Fields*/}
-        {/*    </CardTitle>*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="w-9 p-0"*/}
-        {/*      onClick={() => toggleSection("customFields")}*/}
-        {/*    >*/}
-        {/*      {expandedSections.customFields ? (*/}
-        {/*        <ChevronUp className="h-4 w-4" />*/}
-        {/*      ) : (*/}
-        {/*        <ChevronDown className="h-4 w-4" />*/}
-        {/*      )}*/}
-        {/*    </Button>*/}
-        {/*  </CardHeader>*/}
-        {/*  {expandedSections.customFields && (*/}
-        {/*    <CardContent className="pt-4">*/}
-        {/*      <div className="flex flex-wrap gap-4 mb-4">*/}
-        {/*        <div className="flex items-center space-x-2">*/}
-        {/*          <Checkbox id="warranties" />*/}
-        {/*          <Label htmlFor="warranties">Warranties</Label>*/}
-        {/*        </div>*/}
-        {/*        <div className="flex items-center space-x-2">*/}
-        {/*          <Checkbox id="manufacturer" />*/}
-        {/*          <Label htmlFor="manufacturer">Manufacturer</Label>*/}
-        {/*        </div>*/}
-        {/*        <div className="flex items-center space-x-2">*/}
-        {/*          <Checkbox id="expiry" />*/}
-        {/*          <Label htmlFor="expiry">Expiry</Label>*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">*/}
-        {/*        <div>*/}
-        {/*          <Label htmlFor="discountType2">Discount Type</Label>*/}
-        {/*          <Select>*/}
-        {/*            <SelectTrigger>*/}
-        {/*              <SelectValue placeholder="Choose" />*/}
-        {/*            </SelectTrigger>*/}
-        {/*            <SelectContent>*/}
-        {/*              <SelectItem value="percentage">Percentage</SelectItem>*/}
-        {/*              <SelectItem value="fixed">Fixed Amount</SelectItem>*/}
-        {/*            </SelectContent>*/}
-        {/*          </Select>*/}
-        {/*        </div>*/}
-        {/*        <div>*/}
-        {/*          <Label htmlFor="quantityAlert2">Quantity Alert</Label>*/}
-        {/*          <Input*/}
-        {/*            id="quantityAlert2"*/}
-        {/*            type="number"*/}
-        {/*            placeholder="Enter quantity alert"*/}
-        {/*            onChange={(e)=>{*/}
-        {/*              form.setValue("alertQuantity", e.target.value)*/}
-        {/*            }}*/}
-        {/*          />*/}
-        {/*        </div>*/}
-        {/*        <div>*/}
-        {/*          <Label htmlFor="manufacturedDate">Manufactured Date</Label>*/}
-        {/*          <Input*/}
-        {/*              id="manufacturedDate"*/}
-        {/*              type="date"*/}
-        {/*              onChange={(e)=>{*/}
-        {/*                form.setValue("manufacturedDate", e.target.value)*/}
-        {/*              }}*/}
-        {/*          />*/}
-        {/*        </div>*/}
-        {/*        <div>*/}
-        {/*          <Label htmlFor="expiryDate">Expiry On</Label>*/}
-        {/*          <Input*/}
-        {/*              id="expiryDate"*/}
-        {/*              type="date"*/}
-        {/*              onChange={(e)=>{*/}
-        {/*                form.setValue("expireDate", e.target.value)*/}
-        {/*              }}*/}
-        {/*          />*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*    </CardContent>*/}
-        {/*  )}*/}
-        {/*</Card>*/}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-md font-medium flex items-center gap-3">
+              <span className="bg-blue-100 text-blue-500 size-7 flex items-center justify-center rounded-full">
+                📋
+              </span>
+              Custom Fields
+            </CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-9 p-0"
+              onClick={() => toggleSection("customFields")}
+            >
+              {expandedSections.customFields ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </Button>
+          </CardHeader>
+          {expandedSections.customFields && (
+            <CardContent className="pt-4">
+              <div className="flex flex-wrap gap-4 mb-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="warranties" />
+                  <Label htmlFor="warranties">Warranties</Label>
+                </div>
+                {/*<div className="flex items-center space-x-2">*/}
+                {/*  <Checkbox id="manufacturer" />*/}
+                {/*  <Label htmlFor="manufacturer">Manufacturer</Label>*/}
+                {/*</div>*/}
+                {/*<div className="flex items-center space-x-2">*/}
+                {/*  <Checkbox id="expiry" />*/}
+                {/*  <Label htmlFor="expiry">Expiry</Label>*/}
+                {/*</div>*/}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="manufacturedDate">Manufactured Date</Label>
+                  <Input
+                      id="manufacturedDate"
+                      name="manufacturedDate"
+                      type="date"
+                      onChange={(e)=>{
+                        form.setValue("manufacturedDate", e.target.value)
+                        form.clearErrors('manufacturedDate')
+                      }}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="expiryDate">Expiry On</Label>
+                  <Input
+                      id="expiryDate"
+                      type="date"
+                      onChange={(e)=>{
+                        form.setValue("expireDate", e.target.value)
+                      }}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          )}
+        </Card>
 
         <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4">
           <Button variant="outline" type="button">
             Cancel
           </Button>
-          <Button className="bg-blue-500 hover:bg-blue-400" type="submit">
-            Save Product
+          <Button disabled={isPending} className="bg-blue-500 hover:bg-blue-400" type="submit">
+            {
+              isPending ? (
+                  <Loader/>
+              ) : <span>Save Product</span>
+            }
           </Button>
         </div>
       </form>

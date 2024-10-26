@@ -20,8 +20,7 @@ import { ERROR_MESSAGE, OptionsSelect } from "@/lib/utils";
 import { toast } from "react-toastify";
 import { useState, useTransition } from "react";
 import { addDoc, collection } from "firebase/firestore";
-import { firestore, storage } from "@/firebase/config";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { firestore } from "@/firebase/config";
 
 export interface UseAddProductBehaviour {
   addProductBrandBehaviour: UseAddProductBrandBehaviour;
@@ -43,7 +42,7 @@ export const useAddProduct = (): UseAddProductBehaviour => {
   const [isPending, startTransition] = useTransition();
 
   const [images, setImages] = useState<File[]>([]);
-  const [imageUrl, setImageUrl] = useState<string>();
+  // const [imageUrl, setImageUrl] = useState<string>();
 
   const form = useForm<AddProductFormInputs>({
     resolver: zodResolver(addProductInputsSchemaValidate()),
@@ -102,33 +101,33 @@ export const useAddProduct = (): UseAddProductBehaviour => {
   };
 
   const onSubmit = (data: AddProductFormInputs) => {
-      console.log("data",data)
-    // startTransition(async () => {
-    //   try {
-    //     await addDoc(collection(firestore, "products"), {
-    //       productName: data.productName,
-    //       productCategory: selectedProductCategory().text,
-    //       productBrand: selectedProductBrand().text,
-    //       description: data.description,
-    //       quantity: +data.quantity,
-    //       price: +data.price,
-    //       alertQuantity: +data.alertQuantity,
-    //       unit: selectedProductUnit().text,
-    //       supplier: selectedSupplier().text,
-    //       imageUrl: "",
-    //       manufacturedDate:
-    //         data.manufacturedDate === "" ? null : data.manufacturedDate,
-    //       expireDate: data.expireDate === "" ? null : data.expireDate,
-    //
-    //     });
-    //
-    //     clearForm();
-    //     toast("Produit enregistré avec succès");
-    //   } catch (error) {
-    //     toast.error(ERROR_MESSAGE);
-    //     console.error("Error adding product: ", error);
-    //   }
-    // });
+    startTransition(async () => {
+      try {
+        console.log("data",data)
+        await addDoc(collection(firestore, "products"), {
+          productName: data.productName,
+          productCategory: selectedProductCategory().text,
+          productBrand: selectedProductBrand().text,
+          description: data.description,
+          quantity: +data.quantity,
+          price: +data.price,
+          alertQuantity: +data.alertQuantity,
+          unit: selectedProductUnit().text,
+          supplier: selectedSupplier().text,
+          imageUrl: "",
+          manufacturedDate:
+            data.manufacturedDate === "" ? null : data.manufacturedDate,
+          expireDate: data.expireDate === "" ? null : data.expireDate,
+
+        });
+
+        clearForm();
+        toast("Produit enregistré avec succès");
+      } catch (error) {
+        toast.error(ERROR_MESSAGE);
+        console.error("Error adding product: ", error);
+      }
+    });
   };
 
   return {
