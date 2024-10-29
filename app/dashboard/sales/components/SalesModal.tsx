@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -23,8 +23,11 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { CalendarIcon, X } from "lucide-react"
+import { CalendarIcon, PlusCircle, X } from "lucide-react"
 import { format } from "date-fns"
+import useProducts from '@/app/dashboard/sales/hooks/useProducts'
+import NewCustomerModal from './NewCustomerModal'
+import useCustomer from '../hooks/useCustomer'
 
 interface SalesModalProps {
     isOpen: boolean;
@@ -33,6 +36,9 @@ interface SalesModalProps {
 
 export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
     const [date, setDate] = React.useState<Date>()
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const { products, loading, error } = useProducts()
+    const { customers, customerLoading, customerError } = useCustomer()
 
     if (!isOpen) return null;
 
@@ -48,14 +54,37 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
                 <div className="p-4 space-y-4">
                     <div className="grid grid-cols-3 gap-4">
                         <div>
-                            <Label htmlFor="customerName">Customer Name</Label>
-                            <Select>
-                                <SelectTrigger id="customerName">
-                                    <SelectValue placeholder="Newest" />
+                            <div className="flex justify-between items-center mb-2">
+                                <Label htmlFor="category">Customer Name *</Label>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 px-2 text-xs"
+                                    type="button"
+                                    onClick={
+                                        () => setIsModalOpen(true)
+                                    }
+                                >
+                                    <PlusCircle className="mr-1 h-3 w-3" />
+                                    Add New
+                                </Button>
+                            </div>
+                            <Select
+                                name="category"
+                                required
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Choose" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="newest">Newest</SelectItem>
-                                    <SelectItem value="oldest">Oldest</SelectItem>
+                                    <SelectItem value='pass-by customer'>
+                                        Pass-by Customer
+                                    </SelectItem>
+                                    {customers?.map((customer) => (
+                                        <SelectItem key={customer.id} value={customer.name}>
+                                            {customer.name}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -65,7 +94,7 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
                                 <PopoverTrigger asChild>
                                     <Button
                                         variant={"outline"}
-                                        className={`w-full justify-start text-left font-normal ${!date && "text-muted-foreground"}`}
+                                        className={`w-full justify-start text-left font-normal mt-4 ${!date && "text-muted-foreground"}`}
                                     >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
                                         {date ? format(date, "PPP") : <span>Choose date</span>}
@@ -82,69 +111,69 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
                             </Popover>
                         </div>
                         <div>
-                            <Label htmlFor="supplier">Supplier</Label>
-                            <Select>
-                                <SelectTrigger id="supplier">
-                                    <SelectValue placeholder="Newest" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="newest">Newest</SelectItem>
-                                    <SelectItem value="oldest">Oldest</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <Label htmlFor="quantity">Quantity *</Label>
+                            <Input
+                                id="quantity"
+                                name="quantity"
+                                type="number"
+                                className="mt-4"
+                                placeholder="Enter quantity"
+                                // value={formData.quantity}
+                                // onChange={handleInputChange}
+                                required
+                            />
                         </div>
                     </div>
                     <div>
                         <Label htmlFor="productName">Product Name</Label>
                         <div className="flex">
-                            <Input id="productName" placeholder="Please type product code and select" className="rounded-r-none" />
-                            <Button className="rounded-l-none bg-blue-600 hover:bg-blue-700">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="h-4 w-4"
-                                >
-                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                                    <polyline points="15 3 21 3 21 9" />
-                                    <line x1="10" y1="14" x2="21" y2="3" />
-                                </svg>
-                            </Button>
+                            <Select
+                                name="product"
+                                required
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Choose" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {products?.map((product) => (
+                                        <SelectItem key={product.id} value={product.productName}>
+                                            {product.productName}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
+                    </div>
+                    <div className="flex w-full justify-end">
+                        <Button className="bg-blue-500 hover:bg-blue-400" size={"sm"}><PlusCircle /> Add product</Button>
                     </div>
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Product</TableHead>
-                                <TableHead>Qty</TableHead>
-                                <TableHead>Purchase Price($)</TableHead>
-                                <TableHead>Discount($)</TableHead>
+                                <TableHead>Quantity</TableHead>
+                                {/* <TableHead>Purchase Price($)</TableHead> */}
+                                {/* <TableHead>Discount($)</TableHead>
                                 <TableHead>Tax(%)</TableHead>
-                                <TableHead>Tax Amount($)</TableHead>
-                                <TableHead>Unit Cost($)</TableHead>
-                                <TableHead>Total Cost($)</TableHead>
+                                <TableHead>Tax Amount($)</TableHead> */}
+                                <TableHead>Unit Price(FCFA)</TableHead>
+                                <TableHead>Total Cost(FCFA)</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             <TableRow>
                                 <TableCell className="font-medium">Product 1</TableCell>
                                 <TableCell>1</TableCell>
-                                <TableCell>100.00</TableCell>
-                                <TableCell>0.00</TableCell>
+                                {/* <TableCell>100.00</TableCell> */}
+                                {/* <TableCell>0.00</TableCell>
                                 <TableCell>10</TableCell>
-                                <TableCell>10.00</TableCell>
-                                <TableCell>110.00</TableCell>
-                                <TableCell>110.00</TableCell>
+                                <TableCell>10.00</TableCell> */}
+                                <TableCell>110</TableCell>
+                                <TableCell>110</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
-                    <div className="flex justify-end space-x-4">
+                    {/* <div className="flex justify-end space-x-4">
                         <div className="text-right">
                             <p>Order Tax</p>
                             <p>Discount</p>
@@ -183,13 +212,14 @@ export default function SalesModal({ isOpen, onClose }: SalesModalProps) {
                                 </SelectContent>
                             </Select>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="flex justify-end space-x-2 p-4 border-t">
                     <Button variant="outline" onClick={onClose}>Cancel</Button>
-                    <Button className="bg-orange-500 hover:bg-orange-600">Submit</Button>
+                    <Button className="bg-blue-500 hover:bg-bkue-400">Submit</Button>
                 </div>
             </div>
+            <NewCustomerModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
     )
 }

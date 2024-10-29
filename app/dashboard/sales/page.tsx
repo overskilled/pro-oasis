@@ -1,10 +1,10 @@
 "use client"
 
 import React, { useState } from 'react'
-import SalesHeader from '@/components/sales/SalesHeader'
-import SalesSearchAndFilter from '@/components/sales/SalesSearchAndFilter'
-import SalesTable from '@/components/sales/SalesTable'
-import SalesPagination from '@/components/sales/SalesPagination'
+import SalesHeader from '@/app/dashboard/sales/components/SalesHeader'
+import SalesSearchAndFilter from '@/app/dashboard/sales/components/SalesSearchAndFilter'
+import SalesTable from '@/app/dashboard/sales/components/SalesTable'
+import SalesPagination from '@/app/dashboard/sales/components/SalesPagination'
 
 // Define the type for sales data items
 interface Sale {

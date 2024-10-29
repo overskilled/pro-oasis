@@ -27,6 +27,7 @@ import AddSupplierModal from "./components/AddSupplierModal";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Checkbox} from "@/components/ui/checkbox";
 
+
 export default function NewProductForm() {
   const [expandedSections, setExpandedSections] = useState({
     productInfo: true,
@@ -65,12 +66,14 @@ export default function NewProductForm() {
           <h1 className="text-2xl font-bold text-gray-800">New Product</h1>
           <p className="text-sm text-gray-600">Create new product</p>
         </div>
-        <Button
-          variant="outline"
-          className="bg-gray800 text-white bg-blue-500 hover:bg-blue-400"
-        >
-          <ChevronLeft className="mr-2 h-4 w-4" /> Back to Product
-        </Button>
+        <Link href={"./product"} >
+          <Button
+            variant="outline"
+            className="bg-gray800 text-white bg-blue-500 hover:bg-blue-400"
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" /> Back to Product
+          </Button>
+        </Link>
       </div>
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <Card>
@@ -102,6 +105,7 @@ export default function NewProductForm() {
                   <Input
                     id="productName"
                     name="productName"
+                    className="mt-4"
                     placeholder="Enter product name"
                     registerValidate={register}
                     onChange={(e)=>{
@@ -220,6 +224,7 @@ export default function NewProductForm() {
                 </div>
                 <div>
                   <div className="flex justify-between items-center">
+
                     <Label htmlFor="unit">Supplier *</Label>
                     <Button
                       variant="ghost"
@@ -250,8 +255,8 @@ export default function NewProductForm() {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
-              </div>
+                </div> */}
+              </div> 
               <div className="mt-4">
                 <Label htmlFor="description">Description</Label>
                 <Textarea

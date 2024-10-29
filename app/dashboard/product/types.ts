@@ -1,15 +1,16 @@
 export interface Product {
     id: number;
-    name: string;
+    productName: string;
     image: string;
-    sku: string;
+    userId: string;
     category: string;
     brand: string;
     price: number;
     unit: string;
-    qty: number;
-    createdBy: {
-        name: string;
-        avatar: string;
-    };
+    quantity: number;
+    description: string
+    // createdBy: {
+    //     name: string;
+    //     avatar: string;
+    // };
 }

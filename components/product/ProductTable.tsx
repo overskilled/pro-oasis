@@ -18,33 +18,45 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                         <Checkbox />
                     </TableHead>
                     <TableHead>Product</TableHead>
-                    <TableHead>
+                    {/* <TableHead>
                         SKU
                         <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </TableHead> */}
+                    <TableHead>
+                        <div className="flex items-center">
+                            Category
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
                     </TableHead>
                     <TableHead>
-                        Category
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <div className="flex items-center">
+                            Brand
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
                     </TableHead>
                     <TableHead>
-                        Brand
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <div className="flex items-center">
+                            Price
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
                     </TableHead>
                     <TableHead>
-                        Price
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <div className="flex items-center">
+                            Unit
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
                     </TableHead>
                     <TableHead>
-                        Unit
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <div className="flex items-center">
+                            Qty
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
                     </TableHead>
                     <TableHead>
-                        Qty
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </TableHead>
-                    <TableHead>
-                        Created by
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <div className="flex items-center">
+                            Created by
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                        </div>
                     </TableHead>
                     <TableHead>Action</TableHead>
                 </TableRow>
@@ -57,28 +69,30 @@ export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
                         </TableCell>
                         <TableCell className="font-medium">
                             <div className="flex items-center space-x-3">
-                                <img
+                                {/* Commented out image field */}
+                                {/* <img
                                     src={product.image}
                                     alt={product.name}
                                     className="h-10 w-10 rounded-full"
-                                />
-                                <span>{product.name}</span>
+                                /> */}
+                                <span>{product.productName}</span>
                             </div>
                         </TableCell>
-                        <TableCell>{product.sku}</TableCell>
+                        {/* <TableCell>{product.userId}</TableCell> */}
                         <TableCell>{product.category}</TableCell>
                         <TableCell>{product.brand}</TableCell>
-                        <TableCell>{product.price.toFixed(2)} FCFA</TableCell>
+                        <TableCell>{product.price} FCFA</TableCell>
                         <TableCell>{product.unit}</TableCell>
-                        <TableCell>{product.qty}</TableCell>
+                        <TableCell>{product.quantity}</TableCell>
                         <TableCell>
                             <div className="flex items-center space-x-2">
-                                <img
+                                {/* Commented out createdBy.avatar */}
+                                {/* <img
                                     src={product.createdBy.avatar}
                                     alt={product.createdBy.name}
                                     className="h-8 w-8 rounded-full"
-                                />
-                                <span>{product.createdBy.name}</span>
+                                /> */}
+                                <span>{product.description}</span>
                             </div>
                         </TableCell>
                         <TableCell>

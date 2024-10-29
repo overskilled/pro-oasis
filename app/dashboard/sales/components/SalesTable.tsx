@@ -38,59 +38,59 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                         </TableHead>
                         {/* Add onClick handlers to make columns sortable */}
                         <TableHead onClick={() => onSort("customerName")} className="cursor-pointer">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center">
                                 <span>Customer Name</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
                         <TableHead onClick={() => onSort("reference")} className="cursor-pointer">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center">
                                 <span>Reference</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
                         <TableHead onClick={() => onSort("date")} className="cursor-pointer">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center">
                                 <span>Date</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
-                        <TableHead onClick={() => onSort("status")} className="cursor-pointer">
-                            <div className="flex items-center justify-between">
+                        {/* <TableHead onClick={() => onSort("status")} className="cursor-pointer">
+                            <div className="flex items-center">
                                 <span>Status</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
-                        </TableHead>
+                        </TableHead> */}
                         <TableHead onClick={() => onSort("grandTotal")} className="cursor-pointer">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center">
                                 <span>Grand Total</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
                         <TableHead onClick={() => onSort("paid")} className="cursor-pointer">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center">
                                 <span>Paid</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
                         <TableHead onClick={() => onSort("due")} className="cursor-pointer">
-                            <div className="flex items-center justify-between ">
+                            <div className="flex items-center">
                                 <span>Due</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
                         <TableHead onClick={() => onSort("paymentStatus")} className="cursor-pointer">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center">
                                 <span>Payment Status</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
                         </TableHead>
-                        <TableHead onClick={() => onSort("biller")} className="cursor-pointer">
+                        {/* <TableHead onClick={() => onSort("biller")} className="cursor-pointer">
                             <div className="flex items-center justify-between">
                                 <span>Biller</span>
                                 <ArrowDownUp className="h-4 w-4 ml-1" />
                             </div>
-                        </TableHead>
+                        </TableHead> */}
                         <TableHead>Actions</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -104,7 +104,7 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                 <TableCell className="font-medium">{sale.customerName}</TableCell>
                                 <TableCell>{sale.reference}</TableCell>
                                 <TableCell>{sale.date}</TableCell>
-                                <TableCell>
+                                {/* <TableCell>
                                     <span
                                         className={`px-2 py-1 rounded-full text-xs ${
                                             sale.status === 'Completed'
@@ -114,13 +114,13 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                     >
                                         {sale.status}
                                     </span>
-                                </TableCell>
+                                </TableCell> */}
                                 <TableCell>{sale.grandTotal.toFixed(2)} FCFA</TableCell>
                                 <TableCell>{sale.paid.toFixed(2)} FCFA</TableCell>
                                 <TableCell>{sale.due.toFixed(2)} FCFA</TableCell>
                                 <TableCell>
                                     <span
-                                        className={`px-2 py-1 rounded-full text-xs ${
+                                        className={`flex px-6 py-2 justify-center items-center w-[50%] ml-[20%] rounded-full text-xs ${
                                             sale.paymentStatus === 'Paid'
                                                 ? 'bg-green-100 text-green-800'
                                                 : 'bg-red-100 text-red-800'
@@ -129,7 +129,7 @@ const SalesTable: React.FC<SalesTableProps> = ({ salesData, sortField, sortDirec
                                         {sale.paymentStatus}
                                     </span>
                                 </TableCell>
-                                <TableCell>{sale.biller}</TableCell>
+                                {/* <TableCell>{sale.biller}</TableCell> */}
                                 <TableCell>
                                     <Button variant="ghost" size="icon">
                                         <MoreVertical className="h-4 w-4" />
