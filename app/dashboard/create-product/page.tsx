@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChevronDown,
   ChevronLeft,
-  ChevronUp, Loader,
+  ChevronUp, Loader, Plus,
   PlusCircle,
 } from "lucide-react";
 import { useAddProduct } from "./hooks/useAddProduct";
@@ -49,12 +49,14 @@ export default function NewProductForm() {
     onSubmit,
       isPending,
       form,
-      images
+      imagePreviewUrl
   } = addProductBehaviour;
 
   const {handleSubmit,formState,register} = form
 
   const {errors} = formState
+
+
 
   return (
     <div className="container mx-auto p-4 sm:p-6">
@@ -410,66 +412,81 @@ export default function NewProductForm() {
           )}
         </Card>
 
-        {/*<Card>*/}
-        {/*  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">*/}
-        {/*    <CardTitle className="text-md font-medium">*/}
-        {/*      <span className="bg-blue-100 text-blue-500 p-1 rounded-full mr-2">*/}
-        {/*        🖼*/}
-        {/*      </span>*/}
-        {/*      Images*/}
-        {/*    </CardTitle>*/}
-        {/*    <Button*/}
-        {/*      variant="ghost"*/}
-        {/*      size="sm"*/}
-        {/*      className="w-9 p-0"*/}
-        {/*      onClick={() => toggleSection("images")}*/}
-        {/*    >*/}
-        {/*      {expandedSections.images ? (*/}
-        {/*        <ChevronUp className="h-4 w-4" />*/}
-        {/*      ) : (*/}
-        {/*        <ChevronDown className="h-4 w-4" />*/}
-        {/*      )}*/}
-        {/*    </Button>*/}
-        {/*  </CardHeader>*/}
-        {/*  {expandedSections.images && (*/}
-        {/*    <CardContent className="pt-4">*/}
-        {/*      <div className="flex flex-wrap gap-4">*/}
-        {/*        <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-gray-400 relative">*/}
-        {/*          <input*/}
-        {/*            type="file"*/}
-        {/*            accept="image/*"*/}
-        {/*            multiple*/}
-        {/*            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"*/}
-        {/*            onChange={()=>{}}*/}
-        {/*          />*/}
-        {/*          <Plus className="h-6 w-6 text-gray-400" />*/}
-        {/*          <span className="sr-only">Add Images</span>*/}
-        {/*        </div>*/}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-md font-medium">
+              <span className="bg-blue-100 text-blue-500 p-1 rounded-full mr-2">
+                🖼
+              </span>
+              Images
+            </CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-9 p-0"
+              onClick={() => toggleSection("images")}
+            >
+              {expandedSections.images ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </Button>
+          </CardHeader>
+          {expandedSections.images && (
+            <CardContent className="pt-4">
+              <div className="flex flex-wrap gap-4">
+                <div
+                    className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-gray-400 relative"
+                >
+                  <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      {...form.register("image", {
+                        onChange: (e) => form.setValue("image", e.target.files?.[0] || null),
+                      })}
+                  />
+                  {imagePreviewUrl ? (
+                      <img
+                          src={imagePreviewUrl}
+                          alt="Uploaded Preview"
+                          className="w-full h-full object-cover rounded-lg"
+                      />
+                  ) : (
+                      <>
+                        <Plus className="h-6 w-6 text-gray-400"/>
+                        <span className="sr-only">Add Images</span>
+                      </>
+                  )}
+                </div>
 
-        {/*        {images.map((image, index) => (*/}
-        {/*          <div*/}
-        {/*            key={index}*/}
-        {/*            className="w-32 h-32 border border-gray-200 rounded-lg relative"*/}
-        {/*          >*/}
-        {/*            <img*/}
-        {/*              src={URL.createObjectURL(image)}*/}
-        {/*              alt={`Image ${index}`}*/}
-        {/*              className="w-full h-full object-cover rounded-lg"*/}
-        {/*            />*/}
-        {/*            <Button*/}
-        {/*              variant="destructive"*/}
-        {/*              size="icon"*/}
-        {/*              className="absolute top-1 right-1 h-6 w-6"*/}
-        {/*              onClick={() => {}}*/}
-        {/*            >*/}
-        {/*              <X className="h-4 w-4" />*/}
-        {/*            </Button>*/}
-        {/*          </div>*/}
-        {/*        ))}*/}
-        {/*      </div>*/}
-        {/*    </CardContent>*/}
-        {/*  )}*/}
-        {/*</Card>*/}
+
+                {/*{images.map((image, index) => (*/}
+                {/*  <div*/}
+                {/*    key={index}*/}
+                {/*    className="w-32 h-32 border border-gray-200 rounded-lg relative"*/}
+                {/*  >*/}
+                {/*    <img*/}
+                {/*      src={URL.createObjectURL(image)}*/}
+                {/*      alt={'image'}*/}
+                {/*      className="w-full h-full object-cover rounded-lg"*/}
+                {/*    />*/}
+                {/*    <Button*/}
+                {/*      variant="destructive"*/}
+                {/*      size="icon"*/}
+                {/*      className="absolute top-1 right-1 h-6 w-6"*/}
+                {/*      onClick={() => {}}*/}
+                {/*    >*/}
+                {/*      <X className="h-4 w-4" />*/}
+                {/*    </Button>*/}
+                {/*  </div>*/}
+                {/*))}*/}
+              </div>
+            </CardContent>
+          )}
+        </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -480,15 +497,15 @@ export default function NewProductForm() {
               Custom Fields
             </CardTitle>
             <Button
-              variant="ghost"
-              size="sm"
-              className="w-9 p-0"
-              onClick={() => toggleSection("customFields")}
+                variant="ghost"
+                size="sm"
+                className="w-9 p-0"
+                onClick={() => toggleSection("customFields")}
             >
               {expandedSections.customFields ? (
-                <ChevronUp className="h-4 w-4" />
+                  <ChevronUp className="h-4 w-4"/>
               ) : (
-                <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4" />
               )}
             </Button>
           </CardHeader>

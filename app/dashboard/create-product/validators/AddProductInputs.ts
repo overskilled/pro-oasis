@@ -14,4 +14,5 @@ export type AddProductFormInputs = {
   alertQuantity: string;
   manufacturedDate: string;
   expireDate: string;
+  image: File | null;
 };
