@@ -461,28 +461,6 @@ export default function NewProductForm() {
                       </>
                   )}
                 </div>
-
-
-                {/*{images.map((image, index) => (*/}
-                {/*  <div*/}
-                {/*    key={index}*/}
-                {/*    className="w-32 h-32 border border-gray-200 rounded-lg relative"*/}
-                {/*  >*/}
-                {/*    <img*/}
-                {/*      src={URL.createObjectURL(image)}*/}
-                {/*      alt={'image'}*/}
-                {/*      className="w-full h-full object-cover rounded-lg"*/}
-                {/*    />*/}
-                {/*    <Button*/}
-                {/*      variant="destructive"*/}
-                {/*      size="icon"*/}
-                {/*      className="absolute top-1 right-1 h-6 w-6"*/}
-                {/*      onClick={() => {}}*/}
-                {/*    >*/}
-                {/*      <X className="h-4 w-4" />*/}
-                {/*    </Button>*/}
-                {/*  </div>*/}
-                {/*))}*/}
               </div>
             </CardContent>
           )}
@@ -516,14 +494,6 @@ export default function NewProductForm() {
                   <Checkbox id="warranties" />
                   <Label htmlFor="warranties">Warranties</Label>
                 </div>
-                {/*<div className="flex items-center space-x-2">*/}
-                {/*  <Checkbox id="manufacturer" />*/}
-                {/*  <Label htmlFor="manufacturer">Manufacturer</Label>*/}
-                {/*</div>*/}
-                {/*<div className="flex items-center space-x-2">*/}
-                {/*  <Checkbox id="expiry" />*/}
-                {/*  <Label htmlFor="expiry">Expiry</Label>*/}
-                {/*</div>*/}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 <div>

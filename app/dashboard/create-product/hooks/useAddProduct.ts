@@ -1,27 +1,17 @@
-"use client"
 import { AddProductFormInputs } from "../validators/AddProductInputs";
-import {
-  useAddProductBrand,
-  UseAddProductBrandBehaviour,
-} from "./useAddProductBrand";
-import {
-  useAddProductCategory,
-  UseAddProductCategoryBehaviour,
-} from "./useAddProductCategory";
-import {
-  useAddProductUnit,
-  UseAddProductUnitbehaviour,
-} from "./useAddProductUnit";
+import { useAddProductBrand, UseAddProductBrandBehaviour } from "./useAddProductBrand";
+import { useAddProductCategory, UseAddProductCategoryBehaviour } from "./useAddProductCategory";
+import { useAddProductUnit, UseAddProductUnitbehaviour } from "./useAddProductUnit";
 import { useAddSupplier, UseAddSupplierBehaviour } from "./useAddSupplier";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addProductInputsSchemaValidate } from "../validators/addProductInputsSchemaValidate";
 import { OptionsSelect } from "@/lib/utils";
 import { toast } from "react-toastify";
-import {useEffect, useState, useTransition} from "react";
+import { useEffect, useState, useTransition } from "react";
 import { addDoc, collection } from "firebase/firestore";
-import {firestore, storage} from "@/firebase/config";
-import {getDownloadURL, ref, uploadBytes} from "@firebase/storage";
+import { firestore, storage } from "@/firebase/config";
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 
 export interface UseAddProductBehaviour {
   addProductBrandBehaviour: UseAddProductBrandBehaviour;
@@ -31,7 +21,7 @@ export interface UseAddProductBehaviour {
   form: UseFormReturn<AddProductFormInputs>;
   isPending: boolean;
   onSubmit: (data: AddProductFormInputs) => void;
-  imagePreviewUrl: string | null
+  imagePreviewUrl: string | null;
 }
 
 export const useAddProduct = (): UseAddProductBehaviour => {
@@ -41,46 +31,20 @@ export const useAddProduct = (): UseAddProductBehaviour => {
   const addSupplierBehaviour = useAddSupplier();
 
   const [isPending, startTransition] = useTransition();
-
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
 
   const form = useForm<AddProductFormInputs>({
     resolver: zodResolver(addProductInputsSchemaValidate()),
   });
 
-  const imageFile = form.watch("image"); // Watch the image field from React Hook Form
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const imageFile = form.watch("image");
 
-  const selectedProductCategory = (): OptionsSelect => {
-    return (
-      addProductCategoryBehaviour.productCategories.find(
-        (option) => option.value === form.watch("productCategory")
-      ) ?? addProductCategoryBehaviour.productCategories[0]
-    );
-  };
-
-  const selectedProductBrand = (): OptionsSelect => {
-    return (
-      addProductBrandBehaviour.allProductsBrands.find(
-        (option) => option.value === form.watch("productBrand")
-      ) ?? addProductBrandBehaviour.allProductsBrands[0]
-    );
-  };
-
-  const selectedProductUnit = (): OptionsSelect => {
-    return (
-      addProductUnitBehaviour.allProductsUnits.find(
-        (option) => option.value === form.watch("unit")
-      ) ?? addProductUnitBehaviour.allProductsUnits[0]
-    );
-  };
-
-  const selectedSupplier = (): OptionsSelect => {
-    return (
-      addSupplierBehaviour.allSuppliers.find(
-        (option) => option.value === form.watch("supplier")
-      ) ?? addSupplierBehaviour.allSuppliers[0]
-    );
-  };
+  // Utility functions for selected values
+  const getSelectedOption = (
+      options: OptionsSelect[],
+      selectedValue: string
+  ): OptionsSelect =>
+      options.find((option) => option.value === selectedValue) ?? options[0];
 
   const clearForm = () => {
     form.reset({
@@ -98,61 +62,79 @@ export const useAddProduct = (): UseAddProductBehaviour => {
       productType: "",
       taxType: "",
       discountType: "",
-      discountValue: ""
+      discountValue: "",
+      image: null,
     });
+    setImagePreviewUrl(null);
   };
 
-  const onSubmit = (data: AddProductFormInputs) => {
-    startTransition(async () => {
-      try {
-        let imageUrl = "";
-
-        // Upload image if it exists
-        if (data.image) {
-          const imageRef = ref(storage, `product-images/${data.image.name}`);
-          const uploadResult = await uploadBytes(imageRef, data.image);
-          imageUrl = await getDownloadURL(uploadResult.ref);
-        }
-
-        // Add product data to Firestore
-        await addDoc(collection(firestore, "products"), {
-          productName: data.productName,
-          productCategory: selectedProductCategory().text,
-          productBrand: selectedProductBrand().text,
-          description: data.description,
-          quantity: +data.quantity,
-          price: +data.price,
-          alertQuantity: +data.alertQuantity,
-          unit: selectedProductUnit().text,
-          supplier: selectedSupplier().text,
-          imageUrl,
-          manufacturedDate: data.manufacturedDate === "" ? null : data.manufacturedDate,
-          expireDate: data.expireDate === "" ? null : data.expireDate,
-        });
-
-        clearForm();
-        toast("Produit enregistré avec succès");
-      } catch (error) {
-        toast.error("Erreur lors de l'enregistrement du produit");
-        console.error("Error adding product: ", error);
-      }
-    });
+  // const onSubmit = (data: AddProductFormInputs) => {
+  //   startTransition(async () => {
+  //     try {
+  //       let imageUrl = "";
+  //
+  //       if (data.image instanceof File) {
+  //         const imageRef = ref(storage, `product-images/${data.image.name}`);
+  //         const uploadResult = await uploadBytes(imageRef, data.image);
+  //         imageUrl = await getDownloadURL(uploadResult.ref);
+  //       } else {
+  //         console.warn("No valid image file detected.");
+  //       }
+  //
+  //       const addedProduct = await addDoc(collection(firestore, "products"), {
+  //         productName: data.productName,
+  //         productCategory: getSelectedOption(
+  //             addProductCategoryBehaviour.productCategories,
+  //             data.productCategory
+  //         ).text,
+  //         productBrand: getSelectedOption(
+  //             addProductBrandBehaviour.allProductsBrands,
+  //             data.productBrand
+  //         ).text,
+  //         description: data.description,
+  //         quantity: +data.quantity,
+  //         price: +data.price,
+  //         alertQuantity: +data.alertQuantity,
+  //         unit: getSelectedOption(
+  //             addProductUnitBehaviour.allProductsUnits,
+  //             data.unit
+  //         ).text,
+  //         supplier: getSelectedOption(
+  //             addSupplierBehaviour.allSuppliers,
+  //             data.supplier
+  //         ).text,
+  //         imageUrl,
+  //         manufacturedDate: data.manufacturedDate || null,
+  //         expireDate: data.expireDate || null,
+  //       });
+  //
+  //       console.log("Product added with ID:", addedProduct.id);
+  //       clearForm();
+  //       toast("Produit enregistré avec succès");
+  //     } catch (error) {
+  //       toast.error("Erreur lors de l'enregistrement du produit");
+  //       console.error("Error adding product:", error);
+  //     }
+  //   });
+  // };
+  const onSubmit = async (data:AddProductFormInputs) => {
+    console.log("Submitting data: ", data);
+    try {
+      // API call logic
+    } catch (error) {
+      console.error("Submission error: ", error);
+    }
   };
-
   useEffect(() => {
     if (imageFile instanceof File) {
       const newImageUrl = URL.createObjectURL(imageFile);
       setImagePreviewUrl(newImageUrl);
 
-      // Cleanup the object URL to avoid memory leaks
-      return () => {
-        URL.revokeObjectURL(newImageUrl);
-      };
+      return () => URL.revokeObjectURL(newImageUrl);
     } else {
-      setImagePreviewUrl(null); // Reset preview if no valid file
+      setImagePreviewUrl(null);
     }
   }, [imageFile]);
-  console.log(imagePreviewUrl)
 
   return {
     addProductBrandBehaviour,
@@ -162,6 +144,6 @@ export const useAddProduct = (): UseAddProductBehaviour => {
     form,
     isPending,
     onSubmit,
-    imagePreviewUrl
+    imagePreviewUrl,
   };
 };
