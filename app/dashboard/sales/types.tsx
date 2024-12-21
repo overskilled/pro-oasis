@@ -33,5 +33,5 @@ export interface SaleData {
     reference?: string;
     biller?: string
     saleReference?: string
-    date: Timestamp | null
+    date: Timestamp | number
 }

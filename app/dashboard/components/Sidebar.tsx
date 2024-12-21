@@ -46,7 +46,7 @@ const sidebarData = [
         items: [
             { icon: ShoppingCartIcon, label: "Sales", href: "/dashboard/sales" },
             { icon: CirclePercent, label: "POS", href: "/dashboard/pos" },
-            { icon: CirclePercent, label: "Estimate", href: "/dashboard/pos" },
+            { icon: CirclePercent, label: "Estimate", href: "/dashboard/estimates" },
             { icon: CirclePercent, label: "Purchase order", href: "/dashboard/pos" },
             { icon: CirclePercent, label: "Delivery slip", href: "/dashboard/pos" },
             { icon: CirclePercent, label: "Credit note", href: "/dashboard/pos" },

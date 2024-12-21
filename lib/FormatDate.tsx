@@ -1,14 +1,25 @@
 import { Timestamp } from "firebase/firestore";
 
-const formatDate = (timestamp: Timestamp | null): string => {
+const formatDate = (timestamp: Timestamp | number | undefined): string => {
     if (!timestamp) {
-        return "-"; // Or return "" if you prefer an empty string
+        return "-"; // Return a placeholder for undefined values
     }
-    
-    const date = timestamp.toDate();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+
+    let date: Date;
+
+    if (timestamp instanceof Timestamp) {
+        date = timestamp.toDate(); // Firestore Timestamp object
+    } else if (typeof timestamp === "number") {
+        date = new Date(timestamp); // Unix timestamp
+    } else {
+        console.error("Invalid timestamp value");
+        return "-";
+    }
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
+
     return `${day}/${month}/${year}`;
 };
 
